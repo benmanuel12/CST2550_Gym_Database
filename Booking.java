@@ -1,5 +1,5 @@
 public class Booking{
-    private String id = "B"; // + the length of the Client relation + 1 made up to 3 digits
+    private String id = "";
     private String clientId = "";
     private String trainerId = "";
     private String date = "";
@@ -20,26 +20,50 @@ public class Booking{
     public String getId(){
 	return this.id;
     }
-     public String getClientId(){
+    public String getClientId(){
 	return this.id;
     }
-     public String getTrainerId(){
+    public String getTrainerId(){
 	return this.id;
     }
-     public String getDate(){
+    public String getDate(){
 	return this.id;
     }
-     public String getId(){
-	return this.id;
+    public String getTimeStart(){
+	return this.timeStart;
     }
-     public String getId(){
-	return this.id;
+    public String getTimeEnd(){
+	return this.timeEnd;
     }
-     public String getId(){
-	return this.id;
+    public String getFocus(){
+	return this.focus;
     }
 
-     public void setId(id){
+    public void setId(id){
 	this.id = id;
-     }    
+    }
+
+    public void setClientId(clientId){
+	this.clientId = clientId;
+    }
+
+    public void setTrainerId(trainerId){
+	this.TrainerId = trainerId;
+    }
+
+    public void setDate(date){
+	this.date = date;
+    }
+
+    public void setTimeStart(timeStart){
+	this.timeStart = timeStart;
+    }
+
+    public void setTimeEnd(timeEnd){
+	this.timeEnd = timeEnd;
+    }
+
+    public void setFocus(focus){
+	this.focus = focus;
+    }  
 }

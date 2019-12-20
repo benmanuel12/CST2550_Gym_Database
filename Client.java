@@ -1,5 +1,5 @@
 public class Client{
-    private String id = "C"; // + the length of the Client relation + 1 made up to 3 digits
+    private String id = "";
     private String firstName = "";
     private String lastName = "";
 
@@ -13,25 +13,23 @@ public class Client{
 	return this.id;
     }
 
-     public String getFirstName(){
+    public String getFirstName(){
 	return this.firstName;
     }
 
-     public String getLastName(){
+    public String getLastName(){
 	return this.lastName;
     }
 
-     public void setId(id){
+    public void setId(id){
 	this.id = id;
     }
 
-     public void setId(firstName){
+    public void setFirstName(firstName){
 	 this.firstName = firstName;
     }
 
-     public void setId(lastName){
+    public void setLastName(lastName){
 	 this.lastName = lastName;
-    }
-    
-    
+    } 
 }

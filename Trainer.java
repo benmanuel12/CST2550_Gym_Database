@@ -1,5 +1,5 @@
 public class Trainer{
-    private String id = "T"; // + the length of the Trainer relation + 1 made up to 3 digits
+    private String id = "";
     private String firstName = "";
     private String lastName = "";
 
@@ -25,11 +25,11 @@ public class Trainer{
 	this.id = id;
     }
 
-     public void setId(firstName){
+     public void setFirstName(firstName){
 	 this.firstName = firstName;
     }
 
-     public void setId(lastName){
+     public void setLastName(lastName){
 	 this.lastName = lastName;
     }
     
