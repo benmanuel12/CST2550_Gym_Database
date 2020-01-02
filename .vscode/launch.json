@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - JavaGUI",
+            "request": "launch",
+            "mainClass": "JavaGUI",
+            "projectName": "CST2550_Gym_Database_dab619e6"
+        }
+    ]
+}

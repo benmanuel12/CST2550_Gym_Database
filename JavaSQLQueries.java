@@ -374,4 +374,6 @@ public class JavaSQLQueries {
 		} catch (SQLException ex) {
 			System.out.println("SQL error: " + ex.getMessage());
 		}
+
+		
 }
