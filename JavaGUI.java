@@ -112,7 +112,14 @@ public class JavaGUI extends Application {
         addBookingSubmit.setOnAction((ActionEvent event) -> {Platform.exit(); });
         grid.add(filteredSelectSubmit, 3, 7);
 
-        // list all
+        // UI elements for listing all bookings 
+        Button listAllSubmit = new Button("List All");
+        listAllSubmit.setOnAction((ActionEvent event) -> {Platform.exit(); });
+        grid.add(listAllSubmit, 0, 8);
+
+        // placeholder for output
+        TextField outputTextField = new TextField("Output");
+        grid.add(outputTextField, 0, 8);
 
         Scene scene = new Scene(grid, 500, 500);
 
