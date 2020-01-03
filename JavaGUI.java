@@ -129,9 +129,12 @@ public class JavaGUI extends Application {
 
         // placeholder for output
         TextField outputTextField = new TextField("Output");
+	outputTextField.setPrefWidth(1000);
+	outputTextField.setMaxWidth(1000);
+	grid.setColumnSpan(outputTextField, 7); 
         grid.add(outputTextField, 0, 8);
 
-        Scene scene = new Scene(grid, 500, 750);
+        Scene scene = new Scene(grid, 1000, 500);
 
         stage.setTitle("Database GUI");
         stage.setScene(scene);
@@ -143,23 +146,23 @@ public class JavaGUI extends Application {
     }
 
     public static void addBookingFunction(){
-        Booking newBooking = new Booking(addbookingIDTextField.getText())
+	// Booking newBooking = new Booking(addbookingIDTextField.getText())
     }
 
     public static void updateBookingFunction(){
-        pass;
+        //pass;
     }
 
     public static void deleteBookingFunction(){
-        pass;
+	// pass;
     }
 
     public static void filteredSelectFunction(){
-        pass;
+	//  pass;
     }
 
     public static void listAllFunction(){
-        pass;
+	// pass;
     }
 
     

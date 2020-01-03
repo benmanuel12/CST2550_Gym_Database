@@ -39,31 +39,31 @@ public class Booking{
 	return this.focus;
     }
 
-    public void setId(id){
+    public void setId(String id){
 	this.id = id;
     }
 
-    public void setClientId(clientId){
+    public void setClientId(String clientId){
 	this.clientId = clientId;
     }
 
-    public void setTrainerId(trainerId){
-	this.TrainerId = trainerId;
+    public void setTrainerId(String trainerId){
+	this.trainerId = trainerId;
     }
 
-    public void setDate(date){
+    public void setDate(String date){
 	this.date = date;
     }
 
-    public void setTimeStart(timeStart){
+    public void setTimeStart(String timeStart){
 	this.timeStart = timeStart;
     }
 
-    public void setTimeEnd(timeEnd){
+    public void setTimeEnd(String timeEnd){
 	this.timeEnd = timeEnd;
     }
 
-    public void setFocus(focus){
+    public void setFocus(String focus){
 	this.focus = focus;
     }  
 }
