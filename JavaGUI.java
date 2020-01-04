@@ -175,7 +175,7 @@ public class JavaGUI extends Application {
 	}
 
 	public static void filteredSelectFunction() {
-		String chosenType = filterBy.getText();
+		String chosenType = filterBy.getValue();
 		String input = filteredSelectTextField.getText();
 		listBookingFiltered(chosenType, input);
 	}

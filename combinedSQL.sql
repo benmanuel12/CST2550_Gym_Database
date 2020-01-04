@@ -31,13 +31,13 @@ FOREIGN KEY (trainerID) REFERENCES Trainers(trainerID)
 --Clients Table
 --clientID, firstName, lastName
 INSERT INTO Clients
-VALUES ('0001', 'Lauren', 'Beard');
+VALUES ('C001', 'Lauren', 'Beard');
 INSERT INTO Clients
-VALUES ('0002', 'Esme', 'Mosley');
+VALUES ('C002', 'Esme', 'Mosley');
 INSERT INTO Clients
-VALUES ('0003', 'Leyla', 'Hayden');
+VALUES ('C003', 'Leyla', 'Hayden');
 INSERT INTO Clients
-VALUES ('0004', 'Rosie', 'Johnson');
+VALUES ('C004', 'Rosie', 'Johnson');
 INSERT INTO Clients
 VALUES ('C005', 'Angela', 'Terrell');
 INSERT INTO Clients
