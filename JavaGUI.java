@@ -1,5 +1,4 @@
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -209,7 +208,7 @@ public class JavaGUI extends Application {
 			}
 
 			// is the Client ID valid?
-			String testClientID = "SELECT clientID FROM Bookings;";
+			String testClientID = "SELECT clientID FROM Clients;";
 			ResultSet r2 = statement.executeQuery(testClientID);
 
 			ArrayList<String> takenClients = new ArrayList<String>();
@@ -224,7 +223,7 @@ public class JavaGUI extends Application {
 			}
 
 			// is the Trainer ID valid?
-			String testTrainerID = "SELECT trainerID FROM Bookings;";
+			String testTrainerID = "SELECT trainerID FROM Trainers;";
 			ResultSet r3 = statement.executeQuery(testTrainerID);
 
 			ArrayList<String> takenTrainers = new ArrayList<String>();
@@ -381,7 +380,7 @@ public class JavaGUI extends Application {
 			}
 
 			// is the Client ID valid?
-			String testClientID = "SELECT clientID FROM Bookings;";
+			String testClientID = "SELECT clientID FROM Clients;";
 			ResultSet r2 = statement.executeQuery(testClientID);
 
 			ArrayList<String> takenClients = new ArrayList<String>();
@@ -396,7 +395,7 @@ public class JavaGUI extends Application {
 			}
 
 			// is the Trainer ID valid?
-			String testTrainerID = "SELECT trainerID FROM Bookings;";
+			String testTrainerID = "SELECT trainerID FROM Trainers;";
 			ResultSet r3 = statement.executeQuery(testTrainerID);
 
 			ArrayList<String> takenTrainers = new ArrayList<String>();
