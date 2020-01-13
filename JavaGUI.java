@@ -216,10 +216,10 @@ public class JavaGUI extends Application {
 				takenClients.add(r2.getString("clientsID"));
 			}
 
-			if (!takenClients.contains(bookingDetails.getClientId())) {
+			if (takenClients.contains(bookingDetails.getClientId())) {
 				existingClient = true;
 			} else {
-				System.out.println("Client ID already used");
+				System.out.println("Nonexistant Client ID");
 			}
 
 			// is the Trainer ID valid?
@@ -231,16 +231,16 @@ public class JavaGUI extends Application {
 				takenTrainers.add(r3.getString("trainerID"));
 			}
 
-			if (!takenIDs.contains(bookingDetails.getTrainerId())) {
+			if (takenTrainers.contains(bookingDetails.getTrainerId())) {
 				existingTrainer = true;
 			} else {
-				System.out.println("Trainer ID already used");
+				System.out.println("Nonexistant Trainer ID");
 			}
 
 			// check for clashes
-			String testTimeClient = "SELECT timeStart, timeEnd FROM Bookings WHERE clientID = "
-					+ bookingDetails.getClientId() + ";";
-			ResultSet r4 = statement.executeQuery(testTimeClient);
+			String testTime = "SELECT timeStart, timeEnd FROM Bookings WHERE clientID = "
+					+ bookingDetails.getClientId() + "OR trainerID = " + bookingDetails.getTrainerId() + ";";
+			ResultSet r4 = statement.executeQuery(testTime);
 			while (r4.next()) {
 				// if newstart is before newend and both are either before the start of the
 				// current result or after the end of the current result, set validTime to true,
@@ -250,37 +250,13 @@ public class JavaGUI extends Application {
 				int currentStartTime = Integer.parseInt(r4.getString("timeStart").substring(0, 2));
 				int currentEndTime = Integer.parseInt(r4.getString("timeEnd").substring(0, 2));
 
-				if ((newStartTime < newEndTime)
-						&& ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
+				if ((newStartTime < newEndTime) && ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
 					validTime = true;
+					System.out.println("Valid Time");
 				} else {
 					validTime = false;
+					System.out.println("Invalid Time");
 				}
-			}
-
-			String testTimeTrainer = "SELECT timeStart, timeEnd FROM Bookings WHERE trainerID = "
-					+ bookingDetails.getTrainerId() + ";";
-			ResultSet r5 = statement.executeQuery(testTimeTrainer);
-
-			while (r5.next()) {
-				// if newstart is before newend and both are either before the start of the
-				// current result or after the end of the current result, set validTime to true,
-				// otherwise false
-				int newStartTime = Integer.parseInt(bookingDetails.getTimeStart().substring(0, 2));
-				int newEndTime = Integer.parseInt(bookingDetails.getTimeEnd().substring(0, 2));
-				int currentStartTime = Integer.parseInt(r5.getString("timeStart").substring(0, 2));
-				int currentEndTime = Integer.parseInt(r5.getString("timeEnd").substring(0, 2));
-
-				if ((newStartTime < newEndTime)
-						&& ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
-					validTime = true;
-				} else {
-					validTime = false;
-				}
-			}
-
-			if (validTime == false) {
-				System.out.println("Invalid Time");
 			}
 
 			// actually add the booking
@@ -388,7 +364,7 @@ public class JavaGUI extends Application {
 				takenClients.add(r2.getString("clientsID"));
 			}
 
-			if (!takenClients.contains(bookingDetails.getClientId())) {
+			if (takenClients.contains(bookingDetails.getClientId())) {
 				existingClient = true;
 			} else {
 				System.out.println("Client ID already used");
@@ -403,16 +379,16 @@ public class JavaGUI extends Application {
 				takenTrainers.add(r3.getString("trainerID"));
 			}
 
-			if (!takenIDs.contains(bookingDetails.getTrainerId())) {
+			if (takenTrainers.contains(bookingDetails.getTrainerId())) {
 				existingTrainer = true;
 			} else {
 				System.out.println("Trainer ID already used");
 			}
 
 			// check for clashes
-			String testTimeClient = "SELECT timeStart, timeEnd FROM Bookings WHERE clientID = "
-					+ bookingDetails.getClientId() + ";";
-			ResultSet r4 = statement.executeQuery(testTimeClient);
+			String testTime = "SELECT timeStart, timeEnd FROM Bookings WHERE clientID = "
+					+ bookingDetails.getClientId() + "OR trainerID = " + bookingDetails.getTrainerId() + ";";
+			ResultSet r4 = statement.executeQuery(testTime);
 			while (r4.next()) {
 				// if newstart is before newend and both are either before the start of the
 				// current result or after the end of the current result, set validTime to true,
@@ -422,37 +398,13 @@ public class JavaGUI extends Application {
 				int currentStartTime = Integer.parseInt(r4.getString("timeStart").substring(0, 2));
 				int currentEndTime = Integer.parseInt(r4.getString("timeEnd").substring(0, 2));
 
-				if ((newStartTime < newEndTime)
-						&& ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
+				if ((newStartTime < newEndTime) && ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
 					validTime = true;
+					System.out.println("Valid Time");
 				} else {
 					validTime = false;
+					System.out.println("Invalid Time");
 				}
-			}
-
-			String testTimeTrainer = "SELECT timeStart, timeEnd FROM Bookings WHERE trainerID = "
-					+ bookingDetails.getTrainerId() + ";";
-			ResultSet r5 = statement.executeQuery(testTimeTrainer);
-
-			while (r5.next()) {
-				// if newstart is before newend and both are either before the start of the
-				// current result or after the end of the current result, set validTime to true,
-				// otherwise false
-				int newStartTime = Integer.parseInt(bookingDetails.getTimeStart().substring(0, 2));
-				int newEndTime = Integer.parseInt(bookingDetails.getTimeEnd().substring(0, 2));
-				int currentStartTime = Integer.parseInt(r5.getString("timeStart").substring(0, 2));
-				int currentEndTime = Integer.parseInt(r5.getString("timeEnd").substring(0, 2));
-
-				if ((newStartTime < newEndTime)
-						&& ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
-					validTime = true;
-				} else {
-					validTime = false;
-				}
-			}
-
-			if (validTime == false) {
-				System.out.println("Invalid Time");
 			}
 
 			if (uniqueID && existingClient && existingTrainer && validTime) {
