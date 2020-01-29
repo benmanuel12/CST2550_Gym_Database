@@ -1,3 +1,10 @@
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -7,10 +14,15 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class JavaClient extends Application {
-    // defining Textfields and ChoiceBoxes here so their contents can be extracted
+
+	static String HOST;
+	static int PORT;
+
+	// defining Textfields and ChoiceBoxes here so their contents can be extracted
 	// for Queries outside of initUI
 	static TextField addbookingIDTextField = new TextField("B000");
 	static TextField addclientIDTextField = new TextField("C000");
@@ -33,6 +45,8 @@ public class JavaClient extends Application {
 
 	static ChoiceBox<String> filterBy = new ChoiceBox<>();
 	static TextField filteredSelectTextField = new TextField();
+
+	static Text outputText = new Text("Output");
 
 	@Override
 	public void start(Stage stage) {
@@ -123,11 +137,9 @@ public class JavaClient extends Application {
 		grid.add(listAllSubmit, 0, 9);
 
 		// placeholder for output
-		TextField outputTextField = new TextField("Output");
-		outputTextField.setPrefWidth(1000);
-		outputTextField.setMaxWidth(1000);
-		grid.setColumnSpan(outputTextField, 7);
-		grid.add(outputTextField, 0, 10);
+
+		grid.setColumnSpan(outputText, 7);
+		grid.add(outputText, 0, 10);
 
 		Scene scene = new Scene(grid, 1000, 500);
 
@@ -138,6 +150,14 @@ public class JavaClient extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+		if (args.length == 2) {
+			HOST = args[0];
+			PORT = Integer.parseInt(args[1]);
+		} else {
+			HOST = "localhost";
+			PORT = 13;
+		}
+
 	}
 
 	public static void addBooking() {
@@ -145,11 +165,30 @@ public class JavaClient extends Application {
 		String newclientID = addclientIDTextField.getText();
 		String newtrainerID = addtrainerIDTextField.getText();
 		String newdate = adddateTextField.getText();
-		String newtimeStart= addtimeStartTextField.getText();
+		String newtimeStart = addtimeStartTextField.getText();
 		String newtimeEnd = addtimeEndTextField.getText();
 		String newfocus = addfocusTextField.getText();
-		Booking newBooking = new Booking(newbookingID, newclientID, newtrainerID, newdate, newtimeStart, newtimeEnd, newfocus);
-		// Send newBooking to Server Program and request to add booking
+		Booking newBooking = new Booking(newbookingID, newclientID, newtrainerID, newdate, newtimeStart, newtimeEnd,
+				newfocus);
+
+		try {
+			Socket socket = new Socket(HOST, PORT);
+
+			ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+			output.writeObject("Add");
+			output.writeObject(newBooking);
+
+			Scanner input = new Scanner(socket.getInputStream());
+			String data = "";
+			while (input.hasNextLine()) {
+				data = data + input.nextLine();
+			}
+			outputText.setText(data);
+
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
+
 	}
 
 	public static void updateBooking() {
@@ -158,25 +197,94 @@ public class JavaClient extends Application {
 		String newclientID = updateclientIDTextField.getText();
 		String newtrainerID = updatetrainerIDTextField.getText();
 		String newdate = updatedateTextField.getText();
-		String newtimeStart= updatetimeStartTextField.getText();
+		String newtimeStart = updatetimeStartTextField.getText();
 		String newtimeEnd = updatetimeEndTextField.getText();
 		String newfocus = updatefocusTextField.getText();
-		Booking newBooking = new Booking(newbookingID, newclientID, newtrainerID, newdate, newtimeStart, newtimeEnd, newfocus);
-		// Send newBooking to Server Program and request to update booking
+		Booking newBooking = new Booking(newbookingID, newclientID, newtrainerID, newdate, newtimeStart, newtimeEnd,
+				newfocus);
+		try {
+			Socket socket = new Socket(HOST, PORT);
+
+			ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+			output.writeObject("Update");
+			output.writeObject(newBooking);
+			output.flush();
+
+			Scanner input = new Scanner(socket.getInputStream());
+			String data = "";
+			while (input.hasNextLine()) {
+				data = data + input.nextLine();
+			}
+			outputText.setText(data);
+
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
 	}
 
 	public static void deleteBooking() {
 		String chosenID = deletebookingIDTextField.getText();
-		// Send chosenID to Server Program and request to delete booking
+		try {
+			Socket socket = new Socket(HOST, PORT);
+
+			ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+			output.writeObject("Delete");
+			output.writeObject(chosenID);
+			output.flush();
+
+			Scanner input = new Scanner(socket.getInputStream());
+			String data = "";
+			while (input.hasNextLine()){
+				data = data + input.nextLine();
+			}
+			outputText.setText(data);
+			
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
 	}
 
 	public static void filteredSelect() {
 		String chosenType = filterBy.getValue();
-		String input = filteredSelectTextField.getText();
-		// Send chosenType and input to Server Program and request to view bookings
-    }
-    
-    public static void listAll() {
-        // Request to view all bookings
-    }
+		String value = filteredSelectTextField.getText();
+		try {
+			Socket socket = new Socket(HOST, PORT);
+
+			ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+			output.writeObject("Filter");
+			output.writeObject(chosenType);
+			output.writeObject(value);
+			output.flush();
+
+			Scanner input = new Scanner(socket.getInputStream());
+			String data = "";
+			while (input.hasNextLine()){
+				data = data + input.nextLine();
+			}
+			outputText.setText(data);
+
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
+	}
+
+	public static void listAll() {
+		try {
+			Socket socket = new Socket(HOST, PORT);
+
+			ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+			output.writeObject("All");
+			output.flush();
+
+			Scanner input = new Scanner(socket.getInputStream());
+			String data = "";
+			while (input.hasNextLine()){
+				data = data + input.nextLine();
+			}
+			outputText.setText(data);
+
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
+	}
 }

@@ -1,4 +1,50 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class JavaServer {
+
+	public static void main(String[] args){
+		final int PORT;
+		if (args.length != 1) {
+			System.out.println("Usage java echoserver PORT");
+			System.exit(1);
+		}
+
+		PORT = Integer.parseInt(args[0]);
+
+		try {
+			Socket socket = null;
+			ServerSocket serverSocket = new ServerSocket(PORT);
+			System.out.println("Server started");
+			System.out.println("Waiting for a client...");
+
+			while (true) {
+				socket = serverSocket.accept();
+				System.out.println("Client Accepted");
+
+				Scanner input = new Scanner(socket.getInputStream());
+				String outputString = input.nextLine();
+
+				PrintWriter output = new PrintWriter(socket.getOutputStream());
+				output.println(outputString);
+				output.flush();
+
+				socket.close();
+			}
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
+
+	}
 
     // add a booking, assuming no clashes
 	public static void add(Booking bookingDetails) {
