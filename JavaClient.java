@@ -177,6 +177,7 @@ public class JavaClient extends Application {
 			ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
 			output.writeObject("Add");
 			output.writeObject(newBooking);
+			output.flush();
 
 			Scanner input = new Scanner(socket.getInputStream());
 			String data = "";
@@ -207,6 +208,7 @@ public class JavaClient extends Application {
 
 			ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
 			output.writeObject("Update");
+			output.writeObject(targetID);
 			output.writeObject(newBooking);
 			output.flush();
 

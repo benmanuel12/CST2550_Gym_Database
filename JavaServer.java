@@ -1,10 +1,73 @@
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class JavaServer {
 
     public static void main(String[] args) {
-        System.out.println("Running");
+        final int PORT;
+        if (args.length != 1) {
+            System.out.println("Usage java echoserver PORT");
+            System.exit(1);
+        }
+
+        PORT = Integer.parseInt(args[0]);
+
+        try {
+            Socket socket = null;
+            ServerSocket serverSocket = new ServerSocket(PORT);
+            System.out.println("Server started");
+            System.out.println("Waiting for a client...");
+
+            while (true) {
+                socket = serverSocket.accept();
+                System.out.println("Client Accepted");
+
+                ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+                String action = (String) input.readObject();
+
+                switch (action) {
+                case "Add": {
+                    Booking booking = (Booking) input.readObject();
+                    add(booking);
+                }
+                    break;
+                case "Update": {
+                    String id = (String) input.readObject();
+                    Booking booking = (Booking) input.readObject();
+                    update(id, booking);
+                }
+                    break;
+                case "Delete": {
+                    String id = (String) input.readObject();
+                    delete(id);
+                }
+                    break;
+                case "Filter": {
+                    String type = (String) input.readObject();
+                    String data = (String) input.readObject();
+                    listBookingFiltered(type, data);
+                }
+                    break;
+                case "All": {
+                    listAll();
+                }
+                    break;
+                }
+                socket.close();
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     // add a booking, assuming no clashes
@@ -23,7 +86,7 @@ public class JavaServer {
             String testBookingID = "SELECT bookingID FROM Bookings;";
             ResultSet r1 = statement.executeQuery(testBookingID);
 
-            ArrayList < String > takenIDs = new ArrayList < String > ();
+            ArrayList<String> takenIDs = new ArrayList<String>();
             while (r1.next()) {
                 takenIDs.add(r1.getString("bookingID"));
             }
@@ -38,7 +101,7 @@ public class JavaServer {
             String testClientID = "SELECT clientID FROM Clients;";
             ResultSet r2 = statement.executeQuery(testClientID);
 
-            ArrayList < String > takenClients = new ArrayList < String > ();
+            ArrayList<String> takenClients = new ArrayList<String>();
             while (r2.next()) {
                 takenClients.add(r2.getString("clientsID"));
             }
@@ -53,7 +116,7 @@ public class JavaServer {
             String testTrainerID = "SELECT trainerID FROM Trainers;";
             ResultSet r3 = statement.executeQuery(testTrainerID);
 
-            ArrayList < String > takenTrainers = new ArrayList < String > ();
+            ArrayList<String> takenTrainers = new ArrayList<String>();
             while (r3.next()) {
                 takenTrainers.add(r3.getString("trainerID"));
             }
@@ -64,8 +127,8 @@ public class JavaServer {
             }
 
             // check for clashes
-            String testTime = "SELECT timeStart, timeEnd FROM Bookings WHERE clientID = '" +
-                bookingDetails.getClientId() + "' OR trainerID = '" + bookingDetails.getTrainerId() + "';";
+            String testTime = "SELECT timeStart, timeEnd FROM Bookings WHERE clientID = '"
+                    + bookingDetails.getClientId() + "' OR trainerID = '" + bookingDetails.getTrainerId() + "';";
             ResultSet r4 = statement.executeQuery(testTime);
             while (r4.next()) {
                 // if newstart is before newend and both are either before the start of the
@@ -76,7 +139,8 @@ public class JavaServer {
                 int currentStartTime = Integer.parseInt(r4.getString("timeStart").substring(0, 2));
                 int currentEndTime = Integer.parseInt(r4.getString("timeEnd").substring(0, 2));
 
-                if ((newStartTime < newEndTime) && ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
+                if ((newStartTime < newEndTime)
+                        && ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
                     validTime = true;
                     System.out.println("Valid Time");
                 } else {
@@ -87,10 +151,10 @@ public class JavaServer {
 
             // actually add the booking
             if (uniqueID && existingClient && existingTrainer && validTime) {
-                String sql = "INSERT INTO Bookings VALUES ('" + bookingDetails.getId() + "', ' " +
-                    bookingDetails.getClientId() + "', '" + bookingDetails.getTrainerId() + "', ' " +
-                    bookingDetails.getDate() + "', ' " + bookingDetails.getTimeStart() + "', ' " +
-                    bookingDetails.getTimeEnd() + "', '" + bookingDetails.getFocus() + "');";
+                String sql = "INSERT INTO Bookings VALUES ('" + bookingDetails.getId() + "', ' "
+                        + bookingDetails.getClientId() + "', '" + bookingDetails.getTrainerId() + "', ' "
+                        + bookingDetails.getDate() + "', ' " + bookingDetails.getTimeStart() + "', ' "
+                        + bookingDetails.getTimeEnd() + "', '" + bookingDetails.getFocus() + "');";
 
                 int qty = statement.executeUpdate(sql);
                 System.out.println(qty + " records were updated");
@@ -121,7 +185,7 @@ public class JavaServer {
             String testBookingID = "SELECT bookingID FROM Bookings;";
             ResultSet r1 = statement.executeQuery(testBookingID);
 
-            ArrayList < String > takenIDs = new ArrayList < String > ();
+            ArrayList<String> takenIDs = new ArrayList<String>();
             while (r1.next()) {
                 takenIDs.add(r1.getString("bookingID"));
             }
@@ -140,7 +204,7 @@ public class JavaServer {
             String testClientID = "SELECT clientID FROM Clients;";
             ResultSet r2 = statement.executeQuery(testClientID);
 
-            ArrayList < String > takenClients = new ArrayList < String > ();
+            ArrayList<String> takenClients = new ArrayList<String>();
             while (r2.next()) {
                 takenClients.add(r2.getString("clientsID"));
             }
@@ -155,7 +219,7 @@ public class JavaServer {
             String testTrainerID = "SELECT trainerID FROM Trainers;";
             ResultSet r3 = statement.executeQuery(testTrainerID);
 
-            ArrayList < String > takenTrainers = new ArrayList < String > ();
+            ArrayList<String> takenTrainers = new ArrayList<String>();
             while (r3.next()) {
                 takenTrainers.add(r3.getString("trainerID"));
             }
@@ -167,8 +231,8 @@ public class JavaServer {
             }
 
             // check for clashes
-            String testTime = "SELECT timeStart, timeEnd FROM Bookings WHERE clientID = '" +
-                bookingDetails.getClientId() + "' OR trainerID = '" + bookingDetails.getTrainerId() + "';";
+            String testTime = "SELECT timeStart, timeEnd FROM Bookings WHERE clientID = '"
+                    + bookingDetails.getClientId() + "' OR trainerID = '" + bookingDetails.getTrainerId() + "';";
             ResultSet r4 = statement.executeQuery(testTime);
             while (r4.next()) {
                 // if newstart is before newend and both are either before the start of the
@@ -179,7 +243,8 @@ public class JavaServer {
                 int currentStartTime = Integer.parseInt(r4.getString("timeStart").substring(0, 2));
                 int currentEndTime = Integer.parseInt(r4.getString("timeEnd").substring(0, 2));
 
-                if ((newStartTime < newEndTime) && ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
+                if ((newStartTime < newEndTime)
+                        && ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
                     validTime = true;
                     System.out.println("Valid Time");
                 } else {
@@ -189,11 +254,11 @@ public class JavaServer {
             }
 
             if (uniqueID && existingClient && existingTrainer && validTime) {
-                String sql = "UPDATE Bookings SET bookingID = '" + bookingDetails.getId() + "', clientID = '" +
-                    bookingDetails.getClientId() + "', trainerID = '" + bookingDetails.getTrainerId() +
-                    "', dateBooked = '" + bookingDetails.getDate() + "', timeStart = '" +
-                    bookingDetails.getTimeStart() + "', timeEnd = '" + bookingDetails.getTimeEnd() + "', focus = '" +
-                    bookingDetails.getFocus() + "' WHERE bookingID = '" + bookingID + "';";
+                String sql = "UPDATE Bookings SET bookingID = '" + bookingDetails.getId() + "', clientID = '"
+                        + bookingDetails.getClientId() + "', trainerID = '" + bookingDetails.getTrainerId()
+                        + "', dateBooked = '" + bookingDetails.getDate() + "', timeStart = '"
+                        + bookingDetails.getTimeStart() + "', timeEnd = '" + bookingDetails.getTimeEnd()
+                        + "', focus = '" + bookingDetails.getFocus() + "' WHERE bookingID = '" + bookingID + "';";
                 int qty = statement.executeUpdate(sql);
                 System.out.println(qty + " records were updated");
 
@@ -233,10 +298,10 @@ public class JavaServer {
             ResultSet results = statement.executeQuery(sql);
 
             while (results.next()) {
-                System.out.println(results.getString("bookingID") + " " + results.getString("clientID") + " " +
-                    results.getString("trainerID") + " " + results.getString("dateBooked") + " " +
-                    results.getString("timeStart") + " " + results.getString("timeEnd") + " " +
-                    results.getString("focus"));
+                System.out.println(results.getString("bookingID") + " " + results.getString("clientID") + " "
+                        + results.getString("trainerID") + " " + results.getString("dateBooked") + " "
+                        + results.getString("timeStart") + " " + results.getString("timeEnd") + " "
+                        + results.getString("focus"));
             }
 
             statement.close();
@@ -256,10 +321,10 @@ public class JavaServer {
             ResultSet results = statement.executeQuery(sql);
 
             while (results.next()) {
-                System.out.println(results.getString("bookingID") + " " + results.getString("clientID") + " " +
-                    results.getString("trainerID") + " " + results.getString("dateBooked") + " " +
-                    results.getString("timeStart") + " " + results.getString("timeEnd") + " " +
-                    results.getString("focus"));
+                System.out.println(results.getString("bookingID") + " " + results.getString("clientID") + " "
+                        + results.getString("trainerID") + " " + results.getString("dateBooked") + " "
+                        + results.getString("timeStart") + " " + results.getString("timeEnd") + " "
+                        + results.getString("focus"));
             }
 
             statement.close();
