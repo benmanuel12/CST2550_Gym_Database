@@ -1,14 +1,14 @@
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class JavaServer {
+
+    static String endString;
 
     public static void main(String[] args) {
         final int PORT;
@@ -37,27 +37,37 @@ public class JavaServer {
                 case "Add": {
                     Booking booking = (Booking) input.readObject();
                     add(booking);
+                    output.writeObject(endString);
+                    output.flush();
                 }
                     break;
                 case "Update": {
                     String id = (String) input.readObject();
                     Booking booking = (Booking) input.readObject();
                     update(id, booking);
+                    output.writeObject(endString);
+                    output.flush();
                 }
                     break;
                 case "Delete": {
                     String id = (String) input.readObject();
                     delete(id);
+                    output.writeObject(endString);
+                    output.flush();
                 }
                     break;
                 case "Filter": {
                     String type = (String) input.readObject();
                     String data = (String) input.readObject();
                     listBookingFiltered(type, data);
+                    output.writeObject(endString);
+                    output.flush();
                 }
                     break;
                 case "All": {
                     listAll();
+                    output.writeObject(endString);
+                    output.flush();
                 }
                     break;
                 }
@@ -94,7 +104,7 @@ public class JavaServer {
             if (!takenIDs.contains(bookingDetails.getId())) {
                 uniqueID = true;
             } else {
-                System.out.println("Booking ID already used");
+                endString = ("Booking ID already used");
             }
 
             // is the Client ID valid?
@@ -109,7 +119,7 @@ public class JavaServer {
             if (takenClients.contains(bookingDetails.getClientId())) {
                 existingClient = true;
             } else {
-                System.out.println("Nonexistant Client ID");
+                endString = ("Nonexistant Client ID");
             }
 
             // is the Trainer ID valid?
@@ -123,7 +133,7 @@ public class JavaServer {
             if (takenTrainers.contains(bookingDetails.getTrainerId())) {
                 existingTrainer = true;
             } else {
-                System.out.println("Nonexistant Trainer ID");
+                endString = ("Nonexistant Trainer ID");
             }
 
             // check for clashes
@@ -142,10 +152,10 @@ public class JavaServer {
                 if ((newStartTime < newEndTime)
                         && ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
                     validTime = true;
-                    System.out.println("Valid Time");
+                    endString = ("Valid Time");
                 } else {
                     validTime = false;
-                    System.out.println("Invalid Time");
+                    endString = ("Invalid Time");
                 }
             }
 
@@ -157,12 +167,12 @@ public class JavaServer {
                         + bookingDetails.getTimeEnd() + "', '" + bookingDetails.getFocus() + "');";
 
                 int qty = statement.executeUpdate(sql);
-                System.out.println(qty + " records were updated");
+                endString = (qty + " records were updated");
 
                 statement.close();
             }
         } catch (SQLException ex) {
-            System.out.println("SQL error: " + ex.getMessage());
+            endString = ("SQL error: " + ex.getMessage());
         }
     }
 
@@ -197,7 +207,7 @@ public class JavaServer {
             if (!takenIDs.contains(bookingDetails.getId())) {
                 uniqueID = true;
             } else {
-                System.out.println("Booking ID already used");
+                endString = ("Booking ID already used");
             }
 
             // is the Client ID valid?
@@ -212,7 +222,7 @@ public class JavaServer {
             if (takenClients.contains(bookingDetails.getClientId())) {
                 existingClient = true;
             } else {
-                System.out.println("Client ID already used");
+                endString = ("Client ID already used");
             }
 
             // is the Trainer ID valid?
@@ -227,7 +237,7 @@ public class JavaServer {
             if (takenTrainers.contains(bookingDetails.getTrainerId())) {
                 existingTrainer = true;
             } else {
-                System.out.println("Trainer ID already used");
+                endString = ("Trainer ID already used");
             }
 
             // check for clashes
@@ -246,10 +256,10 @@ public class JavaServer {
                 if ((newStartTime < newEndTime)
                         && ((newEndTime < currentStartTime) || (currentEndTime < newStartTime))) {
                     validTime = true;
-                    System.out.println("Valid Time");
+                    endString = ("Valid Time");
                 } else {
                     validTime = false;
-                    System.out.println("Invalid Time");
+                    endString = ("Invalid Time");
                 }
             }
 
@@ -260,7 +270,7 @@ public class JavaServer {
                         + bookingDetails.getTimeStart() + "', timeEnd = '" + bookingDetails.getTimeEnd()
                         + "', focus = '" + bookingDetails.getFocus() + "' WHERE bookingID = '" + bookingID + "';";
                 int qty = statement.executeUpdate(sql);
-                System.out.println(qty + " records were updated");
+                endString = (qty + " records were updated");
 
                 statement.close();
             }
@@ -279,11 +289,11 @@ public class JavaServer {
             Statement statement = conn.createStatement();
 
             int qty = statement.executeUpdate(sql);
-            System.out.println(qty + " records were updated");
+            endString = (qty + " records were updated");
 
             statement.close();
         } catch (SQLException ex) {
-            System.out.println("SQL error: " + ex.getMessage());
+            endString = ("SQL error: " + ex.getMessage());
         }
     }
 
@@ -298,7 +308,7 @@ public class JavaServer {
             ResultSet results = statement.executeQuery(sql);
 
             while (results.next()) {
-                System.out.println(results.getString("bookingID") + " " + results.getString("clientID") + " "
+                endString = (results.getString("bookingID") + " " + results.getString("clientID") + " "
                         + results.getString("trainerID") + " " + results.getString("dateBooked") + " "
                         + results.getString("timeStart") + " " + results.getString("timeEnd") + " "
                         + results.getString("focus"));
@@ -306,7 +316,7 @@ public class JavaServer {
 
             statement.close();
         } catch (SQLException ex) {
-            System.out.println("SQL error: " + ex.getMessage());
+            endString = ("SQL error: " + ex.getMessage());
         }
     }
 
@@ -321,7 +331,7 @@ public class JavaServer {
             ResultSet results = statement.executeQuery(sql);
 
             while (results.next()) {
-                System.out.println(results.getString("bookingID") + " " + results.getString("clientID") + " "
+                endString = (results.getString("bookingID") + " " + results.getString("clientID") + " "
                         + results.getString("trainerID") + " " + results.getString("dateBooked") + " "
                         + results.getString("timeStart") + " " + results.getString("timeEnd") + " "
                         + results.getString("focus"));
@@ -329,7 +339,7 @@ public class JavaServer {
 
             statement.close();
         } catch (SQLException ex) {
-            System.out.println("SQL error: " + ex.getMessage());
+            endString = ("SQL error: " + ex.getMessage());
         }
     }
 }
